@@ -1,1 +1,61 @@
-﻿
+﻿@using SimchaApplication.Models
+@using SimchaData
+@model SimchaViewModel
+
+
+<h1 style="text-align: center">Simchas</h1>
+<hr />
+<button class="btn btn btn-info btn-block" id="new-simcha">New Simcha</button>
+<hr />
+<table class="table table-striped table-bordered table-hover">
+    <tr>
+        <th>Contributions</th>
+        <th>Simcha Name</th>
+        <th>Count</th>
+        <th>Total</th>
+        <th>Date</th>
+    </tr>
+    @foreach(Simcha s in Model.Simchas)
+    {
+        <tr>
+            <td></td>
+            <td>@s.SimchaName</td>
+            <td></td>
+            <td></td>
+            <td>@s.Date.ToLongDateString()</td>
+        </tr>
+    }
+</table>
+
+
+<div id="simchaModal" class="modal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">New Simcha</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form method="post" action="/home/addsimcha">
+                <div class="modal-body">
+                    <br />
+                    <label>Simcha Name</label>
+                    <input id="simcha-name" type="text" class="form-control" placeholder="Simcha Name" name="SimchaName" />
+                    <br />
+                    <label>Date</label>
+                    <input id="simcha-date" type="date" class="form-control" name="Date" />
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-primary">Submit</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+@section scripts{
+    <script src="~/Scripts/Simcha.js"></script>
+    }  

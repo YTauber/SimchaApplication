@@ -19,7 +19,6 @@ namespace SimchaData
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public string CellNumber { get; set; }
-        public decimal Total { get; set; }
         public DateTime Date { get; set; }
         public bool AlwaysInclude { get; set; }
     }

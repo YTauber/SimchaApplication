@@ -127,15 +127,14 @@ namespace SimchaData
         {
             SqlConnection connection = new SqlConnection(_connectionString);
             SqlCommand cmd = connection.CreateCommand();
-            cmd.CommandText = @"INSERT INTO Contributor VALUES (@firstName, @lastName, @cellNumber, @total, @date, @alwaysInclude)";
+            cmd.CommandText = @"INSERT INTO Contributors VALUES (@firstName, @lastName, @cellNumber, @date, @alwaysInclude) SELECT SCOPE_IDENTITY()";
             cmd.Parameters.AddWithValue("@firstName", contributor.FirstName);
             cmd.Parameters.AddWithValue("@lastName", contributor.LastName);
             cmd.Parameters.AddWithValue("@cellNumber", contributor.CellNumber);
-            cmd.Parameters.AddWithValue("@total", contributor.Total);
             cmd.Parameters.AddWithValue("@date", contributor.Date);
             cmd.Parameters.AddWithValue("@alwaysInclude", contributor.AlwaysInclude);
             connection.Open();
-            cmd.ExecuteNonQuery();
+            contributor.Id = (int)(decimal)cmd.ExecuteScalar(); 
             connection.Close();
             connection.Dispose();
         }
@@ -159,7 +158,7 @@ namespace SimchaData
         {
             SqlConnection connection = new SqlConnection(_connectionString);
             SqlCommand cmd = connection.CreateCommand();
-            cmd.CommandText = @"INSERT INTO Simchas VALUES (@date, @amount, @contributorId)";
+            cmd.CommandText = @"INSERT INTO Diposits VALUES (@date, @amount, @contributorId)";
             cmd.Parameters.AddWithValue("@date", diposit.Date);
             cmd.Parameters.AddWithValue("@amount", diposit.Amount);
             cmd.Parameters.AddWithValue("@contributorId", diposit.ContributorId);
