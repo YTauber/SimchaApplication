@@ -20,4 +20,27 @@
 
     })
 
+    $(".diposit").on('click', function () {
+
+        $('#DipositModal').modal('show');
+        $("#amount").val('');
+        $("#diposit-date").val('');
+        let x = $(this).data('id');
+        $("#id").val(x);
+    })
+
+    $(".edit").on('click', function () {
+
+        $('#EditModal').modal('show');
+        $("#first-edit").val($(this).data('first'));
+        $("#last-edit").val($(this).data('last'));
+        $("#cell-edit").val($(this).data('cell'));
+        $("#date-edit").val($(this).data('date'));
+        
+        $("#Checkbox-edit").prop('checked', $(this).data('alw') == true);
+      
+        let y = $(this).data('edit-id');
+        $("#edit-id").val(y);
+    })
+
 })

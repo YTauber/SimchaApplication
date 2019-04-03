@@ -22,7 +22,32 @@ namespace SimchaApplication.Controllers
         {
             Manager mgr = new Manager(Properties.Settings.Default.ConStr);
             ContributorsViewModel vm = new ContributorsViewModel();
-            vm.Contributors = mgr.GetAllContributors();
+            IEnumerable<Contributor> contributors = mgr.GetAllContributors();
+            vm.Contributors = contributors.Select((c) =>
+            {
+                return new ContributorViewModel
+                {
+                    Id = c.Id,
+                    FirstName = c.FirstName,
+                    LastName = c.LastName,
+                    CellNumber = c.CellNumber,
+                    AlwaysInclude = c.AlwaysInclude,
+                    Date = c.Date,
+                    Balance = mgr.GetBalance(c.Id)
+                };
+            });
+            return View(vm);
+        }
+
+        public ActionResult History(int ContributorId)
+        {
+            Manager mgr = new Manager(Properties.Settings.Default.ConStr);
+            HistoryViewModel vm = new HistoryViewModel
+            {
+                Histories = mgr.GetHistory(ContributorId),
+                Balance = mgr.GetBalance(ContributorId),
+                Name = mgr.GetContributorNameById(ContributorId)
+            };
             return View(vm);
         }
 
@@ -45,6 +70,22 @@ namespace SimchaApplication.Controllers
                 ContributorId = contributor.Id,
                 Date = contributor.Date
             });
+            return RedirectToAction("contributors", "home");
+        }
+
+        [HttpPost]
+        public ActionResult AddDiposit(Diposit diposit)
+        {
+            Manager mgr = new Manager(Properties.Settings.Default.ConStr);
+            mgr.InsertDiposit(diposit);
+            return RedirectToAction("contributors", "home");
+        }
+
+        [HttpPost]
+        public ActionResult EditContributor(Contributor contributor)
+        {
+            Manager mgr = new Manager(Properties.Settings.Default.ConStr);
+            mgr.UpdateContributor(contributor);
             return RedirectToAction("contributors", "home");
         }
     }

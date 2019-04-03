@@ -7,24 +7,29 @@
 <hr />
 <button class="btn btn btn-info btn-block" id="new-contributor">New Contributor</button>
 <hr />
-<table class="table table-striped table-bordered table-hover">
-    <tr>
-        <th>Diposit</th>
-        <th>Name</th>
-        <th>Cell</th>
-        <th>Balance</th>
-        <th>Always Include</th>
-        <th>Actions</th>
+<table style="text-align: center; vertical-align: middle;" class="table table-striped table-bordered table-hover">
+    <tr style="text-align: center;">
+        <th style="text-align: center;">Diposit</th>
+        <th style="text-align: center;">Name</th>
+        <th style="text-align: center;">Cell</th>
+        <th style="text-align: center;">Balance</th>
+        <th style="text-align: center;">Always Include</th>
+        <th style="text-align: center;">Actions</th>
     </tr>
-    @foreach (Contributor c in Model.Contributors)
+    @foreach (ContributorViewModel c in Model.Contributors)
     {
         <tr>
-            <td></td>
-            <td>@c.FirstName @c.LastName</td>
-            <td>@c.CellNumber</td>
-            <td></td>
-            <td><span class="@(c.AlwaysInclude ? "glyphicon glyphicon-ok": "glyphicon glyphicon-remove")"></span></td>
-            <td></td>
+            <td><button class="btn btn-link diposit" data-id="@c.Id">Deposit</button></td>
+            <td style="vertical-align: middle;">@c.FirstName @c.LastName</td>
+            <td style="vertical-align: middle;">@c.CellNumber</td>
+            <td style="vertical-align: middle;">@c.Balance.ToString("C")</td>
+            <td style="vertical-align: middle;"><span class="@(c.AlwaysInclude ? "glyphicon glyphicon-ok": "glyphicon glyphicon-remove")"></span></td>
+            <td>
+                <a class="btn btn-link" href="/home/history?contributorid=@c.Id">History</a>
+                <span class="glyphicon glyphicon-minus"></span>
+                <button class="btn btn-link edit" data-edit-id="@c.Id" data-first="@c.FirstName" data-last="@c.LastName" data-cell="@c.CellNumber" 
+                        data-date="@c.Date.ToString("yyyy-MM-dd")" data-alw="@(c.AlwaysInclude ? "true" : "false")">Edit</button>
+            </td>
         </tr>
     }
 </table>
@@ -73,6 +78,75 @@
     </div>
 </div>
 
+<div id="DipositModal" class="modal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Diposit</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form method="post" action="/home/adddiposit">
+                <div class="modal-body">
+                    <br />
+                    <label>Initial Diposit</label>
+                    <input id="amount" type="text" class="form-control" placeholder="Diposit Amount" name="Amount" />
+                    <br />
+                    <label>Date</label>
+                    <input id="diposit-date" type="date" class="form-control" name="Date" />
+                    <br />
+                    <input id="id" name="ContributorId" type="hidden" />
+                    </div>    
+                <div class="modal-footer">
+                    <button class="btn btn-primary">Submit</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div id="EditModal" class="modal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Edit Contributor</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form method="post" action="/home/editcontributor">
+                <div class="modal-body">
+                    <br />
+                    <label>First Name</label>
+                    <input id="first-edit" type="text" class="form-control" placeholder="First Name" name="FirstName" />
+                    <br />
+                    <label>Last Name</label>
+                    <input id="last-edit" type="text" class="form-control" placeholder="Last Name" name="LastName" />
+                    <br />
+                    <label>Cell Number</label>
+                    <input id="cell-edit" type="text" class="form-control" placeholder="Cell Number" name="CellNumber" />
+                    <br />
+                    <label>Date</label>
+                    <input id="date-edit" type="date" class="form-control" name="Date" />
+                    <br />
+                    <div class="form-check">
+                        <input class="form-check-input" name="alwaysinclude" type="checkbox" value="true" id="Checkbox-edit">
+                        <label class="form-check-label" for="Checkbox">
+                            Always Include
+                        </label>
+                    </div>
+                    <input type="hidden" name="id" id="edit-id" />
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-primary">Update</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
 
 @section scripts{
     <script src="~/Scripts/Simcha.js"></script>

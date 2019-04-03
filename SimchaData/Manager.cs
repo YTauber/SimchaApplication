@@ -110,6 +110,93 @@ namespace SimchaData
             return contributions;
         }
 
+        public decimal GetBalance(int contributorId)
+        {
+            IEnumerable<History> histories = GetHistory(contributorId);
+            return histories.Sum(b => b.Amount);
+        }
+
+        public IEnumerable<History> GetHistory(int ContributorId)
+        {
+            SqlConnection connection = new SqlConnection(_connectionString);
+            SqlCommand cmd = connection.CreateCommand();
+            cmd.CommandText = @"SELECT * FROM Diposits WHERE ContributorId = @id";
+            cmd.Parameters.AddWithValue("@id", ContributorId);
+            connection.Open();
+            SqlDataReader reader = cmd.ExecuteReader();
+            List<History> history = new List<History>();
+            while (reader.Read())
+            {
+                history.Add(new History
+                {
+                    Action = "Diposit",
+                    Amount = (decimal)reader["Amount"],
+                    Date = (DateTime)reader["Date"]
+                });
+            }
+
+            history.AddRange(addContributes(ContributorId));
+
+            connection.Close();
+            connection.Dispose();
+            return history.OrderByDescending(h => h.Date);
+        }
+
+        private IEnumerable<History> addContributes(int ContributorId)
+        {
+            SqlConnection connection = new SqlConnection(_connectionString);
+            SqlCommand cmd = connection.CreateCommand();
+            cmd.CommandText = @"SELECT * FROM Contributions WHERE ContributorId = @id";
+            cmd.Parameters.AddWithValue("@id", ContributorId);
+            connection.Open();
+            SqlDataReader reader = cmd.ExecuteReader();
+            List<History> histories = new List<History>();
+            while (reader.Read())
+            {
+                histories.Add(new History
+                {
+                    Action = $"Contribution for {GetSimchaNameById((int)reader["SimchaId"])}",
+                    Amount = (decimal)reader["Amount"],
+                    Date = (DateTime)reader["Date"]
+                });
+            }
+            connection.Close();
+            connection.Dispose();
+            return histories;
+        }
+
+        public string GetSimchaNameById(int SimchaId)
+        {
+            SqlConnection connection = new SqlConnection(_connectionString);
+            SqlCommand cmd = connection.CreateCommand();
+            cmd.CommandText = @"SELECT SimchaName FROM Simchas WHERE id = @id";
+            cmd.Parameters.AddWithValue("@id", SimchaId);
+            connection.Open();
+            
+            string name = (string)cmd.ExecuteScalar();
+            connection.Close();
+            connection.Dispose();
+            return name;
+        }
+
+        public string GetContributorNameById(int ContributorId)
+        {
+            SqlConnection connection = new SqlConnection(_connectionString);
+            SqlCommand cmd = connection.CreateCommand();
+            cmd.CommandText = @"SELECT FirstName, LastName FROM Contributors WHERE id = @id";
+            cmd.Parameters.AddWithValue("@id", ContributorId);
+            connection.Open();
+            SqlDataReader reader = cmd.ExecuteReader();
+            if (!reader.Read())
+            {
+                return null;
+            }
+            string name = (string)reader["FirstName"] + " " + (string)reader["LastName"];
+            connection.Close();
+            connection.Dispose();
+            return name;
+        }
+
         public void InsertSimcha(Simcha simcha)
         {
             SqlConnection connection = new SqlConnection(_connectionString);
@@ -135,6 +222,24 @@ namespace SimchaData
             cmd.Parameters.AddWithValue("@alwaysInclude", contributor.AlwaysInclude);
             connection.Open();
             contributor.Id = (int)(decimal)cmd.ExecuteScalar(); 
+            connection.Close();
+            connection.Dispose();
+        }
+
+        public void UpdateContributor(Contributor contributor)
+        {
+            SqlConnection connection = new SqlConnection(_connectionString);
+            SqlCommand cmd = connection.CreateCommand();
+            cmd.CommandText = @"UPDATE Contributors SET FirstName = @firstName, LastName = @lastName, CellNumber  = @cellNumber,
+                               Date = @date, AlwaysInclude = @alwaysInclude WHERE id = @id";
+            cmd.Parameters.AddWithValue("@firstName", contributor.FirstName);
+            cmd.Parameters.AddWithValue("@lastName", contributor.LastName);
+            cmd.Parameters.AddWithValue("@cellNumber", contributor.CellNumber);
+            cmd.Parameters.AddWithValue("@date", contributor.Date);
+            cmd.Parameters.AddWithValue("@alwaysInclude", contributor.AlwaysInclude);
+            cmd.Parameters.AddWithValue("@id", contributor.Id);
+            connection.Open();
+            cmd.ExecuteNonQuery();
             connection.Close();
             connection.Dispose();
         }

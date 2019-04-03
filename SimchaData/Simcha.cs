@@ -38,4 +38,11 @@ namespace SimchaData
         public decimal Amount { get; set; }
         public int ContributorId { get; set; }
     }
+
+    public class History
+    {
+        public string Action { get; set; }
+        public DateTime Date { get; set; }
+        public decimal Amount { get; set; }
+    }
 }

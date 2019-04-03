@@ -13,6 +13,24 @@ namespace SimchaApplication.Models
 
     public class ContributorsViewModel
     {
-        public IEnumerable<Contributor> Contributors { get; set; }
+        public IEnumerable<ContributorViewModel> Contributors { get; set; }
+    }
+
+    public class HistoryViewModel
+    {
+        public IEnumerable<History> Histories { get; set; }
+        public string Name { get; set; }
+        public decimal Balance { get; set; }
+    }
+
+   public class ContributorViewModel
+    {
+        public int Id { get; set; }
+        public string FirstName { get; set; }
+        public string LastName { get; set; }
+        public string CellNumber { get; set; }
+        public DateTime Date { get; set; }
+        public bool AlwaysInclude { get; set; }
+        public decimal Balance { get; set; }
     }
 }
