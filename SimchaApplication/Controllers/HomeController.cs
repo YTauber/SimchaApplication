@@ -15,6 +15,8 @@ namespace SimchaApplication.Controllers
             Manager mgr = new Manager(Properties.Settings.Default.ConStr);
             SimchaViewModel vm = new SimchaViewModel();
             vm.Simchas= mgr.GetAllSimchas();
+            vm.Count = mgr.GetContributorCount();
+            vm.Message = (string)TempData["Message"];
             return View(vm);
         }
 
@@ -36,6 +38,8 @@ namespace SimchaApplication.Controllers
                     Balance = mgr.GetBalance(c.Id)
                 };
             });
+            vm.Message = (string)TempData["Message"];
+            vm.Total = mgr.GetTotal();
             return View(vm);
         }
 
@@ -51,11 +55,22 @@ namespace SimchaApplication.Controllers
             return View(vm);
         }
 
+        public ActionResult Contributions(int SimchaId)
+        {
+            Manager mgr = new Manager(Properties.Settings.Default.ConStr);
+            ContributionsViewModel vm = new ContributionsViewModel();
+            vm.contributions = mgr.GetAllContributions(SimchaId);
+            vm.SimchaName = mgr.GetSimchaNameById(SimchaId);
+            vm.SimchaId = SimchaId;
+            return View(vm);
+        }
+
         [HttpPost]
         public ActionResult AddSimcha(Simcha simcha)
         {
             Manager mgr = new Manager(Properties.Settings.Default.ConStr);
             mgr.InsertSimcha(simcha);
+            TempData["Message"] = "The simcha was succesfully added!!";
             return RedirectToAction("index", "home");
         }
 
@@ -70,6 +85,7 @@ namespace SimchaApplication.Controllers
                 ContributorId = contributor.Id,
                 Date = contributor.Date
             });
+            TempData["Message"] = "The contributor was succesfully added!!";
             return RedirectToAction("contributors", "home");
         }
 
@@ -78,6 +94,7 @@ namespace SimchaApplication.Controllers
         {
             Manager mgr = new Manager(Properties.Settings.Default.ConStr);
             mgr.InsertDiposit(diposit);
+            TempData["Message"] = "The diposit was succesfully added!!";
             return RedirectToAction("contributors", "home");
         }
 
@@ -86,7 +103,27 @@ namespace SimchaApplication.Controllers
         {
             Manager mgr = new Manager(Properties.Settings.Default.ConStr);
             mgr.UpdateContributor(contributor);
+            TempData["Message"] = "The contributor was succesfully updated!!";
             return RedirectToAction("contributors", "home");
+        }
+
+        [HttpPost]
+        public ActionResult UpdateContributions(List<ContributionView> cont, int SimchaId)
+        {
+            Manager mgr = new Manager(Properties.Settings.Default.ConStr);
+            mgr.DeleteContributions(SimchaId);
+            IEnumerable<Contribution> contributions = cont.Where((s) => s.Contribute).Select((c) =>
+            {
+                return new Contribution
+                {
+                    SimchaId = SimchaId,
+                    ContributorId = c.ContributorId,
+                    Amount = c.Amount
+                };
+            });
+            mgr.InsertContribution(contributions.ToList());
+            TempData["Message"] = $"You have succesfully updated the {mgr.GetSimchaNameById(SimchaId)} simcha!!";
+            return RedirectToAction("index", "home");
         }
     }
 }

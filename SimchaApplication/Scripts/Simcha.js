@@ -14,8 +14,8 @@
         $("#last-name").val('');
         $("#cell-number").val('');
         $("#diposit").val('');
-        $("#simcha-date").val('');
-        $("#Checkbox").val('');
+        $("#simcha-date").val($("#simcha-date").data('date'));
+        $("#Checkbox").prop("checked", false);
 
 
     })
@@ -24,9 +24,10 @@
 
         $('#DipositModal').modal('show');
         $("#amount").val('');
-        $("#diposit-date").val('');
+        $("#diposit-date").val($("#diposit-date").data('date'));
         let x = $(this).data('id');
         $("#id").val(x);
+        $(".modal-title").text(`Diposit for ${$(this).data('name')}`)
     })
 
     $(".edit").on('click', function () {
@@ -37,10 +38,31 @@
         $("#cell-edit").val($(this).data('cell'));
         $("#date-edit").val($(this).data('date'));
         
-        $("#Checkbox-edit").prop('checked', $(this).data('alw') == true);
+        $("#Checkbox-edit").prop('checked', $(this).data('alw') === "True");
       
         let y = $(this).data('edit-id');
         $("#edit-id").val(y);
     })
+
+    $("#simchaModal").on('change', function () {
+        
+        $("#simcha-submit").prop('disabled', !$("#simcha-name").val() || !$("#simcha-date").val())
+    })
+
+    $("#search").on("keyup", show);
+
+    $(".clear").on('click', function () {
+
+        $("#search").val('');
+        show();
+    })
+
+    function show() {
+
+        var value = $("#search").val().toLowerCase();
+        $(".cont-table tr").filter(function () {
+            $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+        });
+    }
 
 })

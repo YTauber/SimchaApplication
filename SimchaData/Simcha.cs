@@ -45,4 +45,25 @@ namespace SimchaData
         public DateTime Date { get; set; }
         public decimal Amount { get; set; }
     }
+
+    public class SimchaView
+    {
+        public int Id { get; set; }
+        public string SimchaName { get; set; }
+        public int Count { get; set; }
+        public decimal Total { get; set; }
+        public DateTime Date { get; set; }
+    }
+
+    public class ContributionView
+    {
+        public int ContributorId { get; set; }
+        public bool Contribute { get; set; }
+        public string Name { get; set; }
+        public decimal Balance { get; set; }
+        public bool AlwaysInclude { get; set; }
+        public decimal Amount { get; set; }
+    }
+
+   
 }

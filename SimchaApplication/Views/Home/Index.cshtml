@@ -2,6 +2,12 @@
 @using SimchaData
 @model SimchaViewModel
 
+@if (!string.IsNullOrEmpty(Model.Message))
+    {
+        <div style="text-align: center" class="alert alert-success">
+            <strong>Success!</strong> @Model.Message
+        </div>
+    }
 
 <h1 style="text-align: center">Simchas</h1>
 <hr />
@@ -15,13 +21,13 @@
         <th>Total</th>
         <th>Date</th>
     </tr>
-    @foreach(Simcha s in Model.Simchas)
+    @foreach(SimchaView s in Model.Simchas)
     {
         <tr>
-            <td></td>
+            <td><a class="btn btn-link" href="/home/contributions?simchaid=@s.Id">Contributions</a></td>
             <td>@s.SimchaName</td>
-            <td></td>
-            <td></td>
+            <td>@s.Count / @Model.Count</td>
+            <td>@s.Total.ToString("C")</td>
             <td>@s.Date.ToLongDateString()</td>
         </tr>
     }
@@ -47,7 +53,7 @@
                     <input id="simcha-date" type="date" class="form-control" name="Date" />
                 </div>
                 <div class="modal-footer">
-                    <button class="btn btn-primary">Submit</button>
+                    <button disabled id="simcha-submit" class="btn btn-primary">Submit</button>
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                 </div>
             </form>

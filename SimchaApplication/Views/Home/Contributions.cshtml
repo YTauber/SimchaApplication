@@ -1,0 +1,52 @@
+﻿@using SimchaApplication.Models
+@using SimchaData
+@model ContributionsViewModel
+@{
+    ViewBag.Title = "Contributions";
+}
+
+<h2 style="text-align: center">Contributions for @Model.SimchaName</h2>
+<hr />
+<div class="row">
+    <div class="col-md-7 col-lg-offset-2">
+        <input type="text" placeholder="Search..." id="search" class="form-control" />
+    </div>
+    <div class="col-md-2">
+        <button class="btn btn-info clear">CLEAR</button>
+    </div>
+</div>
+<hr />
+<form method="post" action="UpdateContributions?simchaid=@Model.SimchaId">
+
+    <table style="text-align: center" class="table table-striped table-bordered table-hover">
+        <tr>
+            <th style="text-align: center">Contribute</th>
+            <th style="text-align: center">Name</th>
+            <th style="text-align: center">Blance</th>
+            <th style="text-align: center">Always Include</th>
+            <th style="text-align: center">Amount</th>
+        </tr>
+        @{int i = 0;}
+        @foreach (ContributionView c in Model.contributions)
+        {
+            <tr>
+                <td><input name="cont[@i].contribute" type="checkbox" @(c.Contribute ? "checked" : "") value="true" /></td>
+                <td style="color: @(c.Balance > 0 ? "" : "red")">@c.Name</td>
+                <td style="color: @(c.Balance > 0 ? "" : "red")">@c.Balance.ToString("C")</td>
+                <td><span class="@(c.AlwaysInclude ? "glyphicon glyphicon-ok" : "glyphicon glyphicon-remove")"></span></td>
+                <td><input name="cont[@i].Amount" type="text" class="form-control" value="@c.Amount" /></td>
+
+                <input type="hidden" name="cont[@i].contributorid" value="@c.ContributorId" />
+                <input type="hidden" name="cont[@i].simchaid" value="@Model.SimchaId" />
+            </tr>
+            i++;
+        }
+    </table>
+    <hr />
+    <button class="btn btn-info btn-block">UPDATE</button>
+</form>
+
+
+@section scripts{
+    <script src="~/Scripts/Simcha.js"></script>
+}  

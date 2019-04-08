@@ -8,12 +8,23 @@ namespace SimchaApplication.Models
 {
     public class SimchaViewModel
     {
-        public IEnumerable<Simcha> Simchas { get; set; }
+        public IEnumerable<SimchaView> Simchas { get; set; }
+        public int Count { get; set; }
+        public string Message { get; set; }
+    }
+
+    public class ContributionsViewModel
+    {
+        public IEnumerable<ContributionView> contributions { get; set; }
+        public string SimchaName { get; set; }
+        public int SimchaId { get; set; }
     }
 
     public class ContributorsViewModel
     {
         public IEnumerable<ContributorViewModel> Contributors { get; set; }
+        public decimal Total { get; set; }
+        public string Message { get; set; }
     }
 
     public class HistoryViewModel
