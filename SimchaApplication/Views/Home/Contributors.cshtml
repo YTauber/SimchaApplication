@@ -16,7 +16,7 @@
 <hr />
 <div class="row">
     <div class="col-md-7 col-lg-offset-2">
-        <input type="text" placeholder="Search..." id="search" class="form-control" />
+        <input type="text" placeholder="Search..." class="form-control search" />
     </div>
     <div class="col-md-2">
         <button class="btn btn-info clear">CLEAR</button>
@@ -89,7 +89,7 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button class="btn btn-primary">Submit</button>
+                    <button disabled id="cont-submit" class="btn btn-primary">Submit</button>
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                 </div>
             </form>
@@ -118,7 +118,7 @@
                     <input id="id" name="ContributorId" type="hidden" />
                 </div>
                 <div class="modal-footer">
-                    <button class="btn btn-primary">Submit</button>
+                    <button id="diposit-submit" disabled class="btn btn-primary">Submit</button>
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                 </div>
             </form>
@@ -159,7 +159,7 @@
                     <input type="hidden" name="id" id="edit-id" />
                 </div>
                 <div class="modal-footer">
-                    <button class="btn btn-primary">Update</button>
+                    <button id="edit-submit" class="btn btn-primary">Update</button>
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                 </div>
             </form>

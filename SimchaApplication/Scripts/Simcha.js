@@ -49,17 +49,32 @@
         $("#simcha-submit").prop('disabled', !$("#simcha-name").val() || !$("#simcha-date").val())
     })
 
-    $("#search").on("keyup", show);
+    $("#ContributorModal").on('change', function () {
+
+        $("#cont-submit").prop('disabled', !$("#first-name").val() || !$("#last-name").val() || !$("#cell-number").val() || !$("#diposit").val() || !$("#simcha-date").val())
+    })
+
+    $("#DipositModal").on('change', function () {
+
+        $("#diposit-submit").prop('disabled', !$("#amount").val() || !$("#diposit-date").val())
+    })
+
+    $("#EditModal").on('change', function () {
+
+        $("#edit-submit").prop('disabled', !$("#first-edit").val() || !$("#last-edit").val() || !$("#cell-edit").val() || !$("#date-edit").val())
+    })
+
+    $(".search").on("keyup", show);
 
     $(".clear").on('click', function () {
 
-        $("#search").val('');
+        $(".search").val('');
         show();
     })
 
     function show() {
 
-        var value = $("#search").val().toLowerCase();
+        var value = $(".search").val().toLowerCase();
         $(".cont-table tr").filter(function () {
             $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
         });
